@@ -62,15 +62,7 @@ check_pid_and_port()
     local rsync_pid=$2
     local rsync_port=$3
 
-    if ! which lsof > /dev/null; then
-      wsrep_log_error "lsof tool not found in PATH! Make sure you have it installed."
-      exit 2 # ENOENT
-    fi
-
-    if ! which lsof > /dev/null; then
-        wsrep_log_error "lsof tool not found in PATH! Make sure you have it installed."
-        exit 2 # ENOENT
-    fi
+    wsrep_check_programs lsof
 
     local port_info=$(lsof -i :$rsync_port -Pn 2>/dev/null | \
         grep "(LISTEN)")
@@ -268,8 +260,6 @@ then
 
 elif [ "$WSREP_SST_OPT_ROLE" = "joiner" ]
 then
-    wsrep_check_programs lsof
-
     touch $SST_PROGRESS_FILE
     MYSQLD_PID=$WSREP_SST_OPT_PARENT
 
