@@ -306,8 +306,8 @@ test.t1	analyze	status	OK
 EXPLAIN SELECT 1 FROM t1 WHERE a IN
 (SELECT a FROM t1 USE INDEX (i2) IGNORE INDEX (i2));
 id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
-1	PRIMARY	t1	index	PRIMARY,i2	PRIMARY	4	NULL	144	Using index
-1	PRIMARY	<subquery2>	eq_ref	distinct_key	distinct_key	4	func	1	
+1	PRIMARY	<subquery2>	ALL	distinct_key	NULL	NULL	NULL	144	
+1	PRIMARY	t1	eq_ref	PRIMARY,i2	PRIMARY	4	test.t1.a	1	Using index
 2	MATERIALIZED	t1	ALL	NULL	NULL	NULL	NULL	144	
 CREATE TABLE t2 (a INT, b INT, KEY(a));
 INSERT INTO t2 VALUES (1, 1), (2, 2), (3,3), (4,4);
@@ -320,8 +320,8 @@ id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
 EXPLAIN SELECT 1 FROM t2 WHERE a IN
 (SELECT a FROM t1 USE INDEX (i2) IGNORE INDEX (i2));
 id	select_type	table	type	possible_keys	key	key_len	ref	rows	Extra
-1	PRIMARY	t2	index	a	a	5	NULL	4	Using index
-1	PRIMARY	<subquery2>	eq_ref	distinct_key	distinct_key	4	func	1	
+1	PRIMARY	<subquery2>	ALL	distinct_key	NULL	NULL	NULL	144	
+1	PRIMARY	t2	index	a	a	5	NULL	4	Using where; Using index; Using join buffer (flat, BNL join)
 2	MATERIALIZED	t1	ALL	NULL	NULL	NULL	NULL	144	
 DROP TABLE t1, t2;
 # 
